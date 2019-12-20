@@ -1,0 +1,42 @@
+{
+  "name": "instauction",
+  "version": "1.0.0",
+  "description": "Auction demo app",
+  "main": "app/server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "ava \"test/**/*.test.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ismaelfebles/instauction.git"
+  },
+  "keywords": [
+    "auction",
+    "bid",
+    "demo"
+  ],
+  "author": "Ismael Febles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ismaelfebles/instauction/issues"
+  },
+  "homepage": "https://github.com/ismaelfebles/instauction#readme",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
+    "koa-router": "^7.4.0",
+    "mongoose": "^5.8.1"
+  },
+  "devDependencies": {
+    "ava": "^2.4.0",
+    "ava-http": "^1.0.0",
+    "nodemon": "^2.0.2",
+    "test-listen": "^1.1.0"
+  }
+}
