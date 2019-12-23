@@ -47,6 +47,22 @@ const initService = ({
 
       Joi.validate(obj, schema, { convert: false });
     },
+    paginationPayload: obj => {
+      const schema = Joi.object().keys({
+        page: Joi.number()
+          .greater(-1)
+          .required()
+          .error(throwError('No valid "page" property found')),
+        items_per_page: Joi.number()
+          .greater(-1)
+          .required()
+          .error(throwError('No valid "items_per_page" property found')),
+      })
+        .required()
+        .error(throwError('Invalid object'));
+
+      Joi.validate(obj, schema, { convert: true });
+    },
     bidCreationPayload: obj => {
       const schema = Joi.object().keys({
         email: Joi.string()

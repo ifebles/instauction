@@ -65,5 +65,24 @@ module.exports = {
         msg: 'Failed to close %o: %o',
       }, id, reason);
     });
-  }
+  },
+  paginationParser: (validator, pagination) => {
+    let cleanPagination;
+    
+    try {
+      validator.paginationPayload(pagination);
+      cleanPagination = {
+        page: +pagination.page,
+        items_per_page: +pagination.items_per_page,
+      };
+    }
+    catch (ex) {
+      cleanPagination = undefined;
+    }
+
+    return {
+      result: cleanPagination,
+      zeroDisplay: cleanPagination && (!cleanPagination.page || !cleanPagination.items_per_page),
+    };
+  },
 };

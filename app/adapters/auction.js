@@ -39,11 +39,18 @@ const initAdapter = () => ({ auctionModel }) => ({
 
     return documents;
   },
-  find: async (query, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
+  find: async (query, pagination = null, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
     if (hooks.preAction)
-      await hooks.preAction({ query });
+      await hooks.preAction({ query, pagination });
 
-    const documents = await auctionModel.find(query);
+    const findPromise = auctionModel.find(query);
+
+    if (pagination)
+      findPromise
+        .skip(pagination.items_per_page * (pagination.page - 1))
+        .limit(pagination.items_per_page);
+
+    const documents = await findPromise;
 
     if (hooks.postAction)
       await hooks.postAction(documents);

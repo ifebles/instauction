@@ -50,15 +50,19 @@ const initRouter = ({
 
   ///////////////// GET /////////////////
 
-  router.get(`/${idParam}`, async (ctx, next) => {
-    const { id } = ctx.params;
-    ctx.body = await services.auctionService.showAuction({ ctx, id });
+  router.get(`/`, async (ctx, next) => {
+    const { page, items_per_page } = ctx.request.query;
+    ctx.body = await services.auctionService.showAuction({
+      ctx,
+      pagination: { page, items_per_page },
+    });
 
     await next();
   });
 
-  router.get(`/`, async (ctx, next) => {
-    ctx.body = await services.auctionService.showAuction({ ctx });
+  router.get(`/${idParam}`, async (ctx, next) => {
+    const { id } = ctx.params;
+    ctx.body = await services.auctionService.showAuction({ ctx, id });
 
     await next();
   });
@@ -78,7 +82,11 @@ const initRouter = ({
   });
 
   router.get('/status', async (ctx, next) => {
-    ctx.body = await services.auctionService.auctionStatus({ ctx });
+    const { page, items_per_page } = ctx.request.query;
+    ctx.body = await services.auctionService.auctionStatus({
+      ctx,
+      pagination: { page, items_per_page },
+    });
 
     await next();
   });

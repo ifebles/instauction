@@ -1,5 +1,5 @@
 const { AUCTION_STATUS, AUCTION_IDLE_TIME_LIMIT_MS } = require("../util/constants");
-const { RequestError, debugOut, auctionStopperModel, hookActionsDebugger } = require("../util/utilityMethods");
+const { RequestError, debugOut, auctionStopperModel, hookActionsDebugger, paginationParser } = require("../util/utilityMethods");
 const validatorInit = require("../util/validator");
 
 
@@ -85,13 +85,17 @@ const initService = ({
 
       return auctionMapper(result);
     },
-    showAuction: async ({ ctx, id }) => {
+    showAuction: async ({ ctx, id, pagination = null }) => {
       if (id) {
         const result = await auctionAdapter.findById(id, hookActions(ctx));
         return auctionMapper(result);
       }
 
-      const result = await auctionAdapter.find({}, hookActions(ctx));
+      const processedPagination = paginationParser(validate(ctx), pagination);
+      if (processedPagination.zeroDisplay)
+        return [];
+
+      const result = await auctionAdapter.find({}, processedPagination.result, hookActions(ctx));
       return result.map(auctionMapper);
     },
     showAuctionBids: async ({ ctx, id }) => {
@@ -99,13 +103,17 @@ const initService = ({
 
       return result;
     },
-    auctionStatus: async ({ ctx, id }) => {
+    auctionStatus: async ({ ctx, id, pagination = null }) => {
       if (id) {
         const result = await auctionAdapter.findById(id, hookActions(ctx));
         return auctionStatusMapper(result);
       }
 
-      const result = await auctionAdapter.find({}, hookActions(ctx));
+      const processedPagination = paginationParser(validate(ctx), pagination);
+      if (processedPagination.zeroDisplay)
+        return [];
+
+      const result = await auctionAdapter.find({}, processedPagination.result, hookActions(ctx));
       return result.map(auctionStatusMapper);
     },
   };
