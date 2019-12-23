@@ -56,7 +56,7 @@ const initService = ({
       currentDate.setMilliseconds(currentDate.getMilliseconds() + AUCTION_IDLE_TIME_LIMIT_MS);
       const endTime = currentDate.toISOString();
 
-      const result = await auctionAdapter.findOneAndUpdate({ _id: id, status: AUCTION_STATUS.WAITING }, {
+      const result = await auctionAdapter.updateOne({ _id: id, status: AUCTION_STATUS.WAITING }, {
         startTime,
         status: AUCTION_STATUS.ONGOING,
         endTime,
@@ -75,7 +75,7 @@ const initService = ({
     async endAuction({ ctx, id }) {
       const currentDate = new Date().toISOString();
 
-      const result = await auctionAdapter.findOneAndUpdate({ _id: id, status: AUCTION_STATUS.WAITING }, {
+      const result = await auctionAdapter.updateOne({ _id: id, status: AUCTION_STATUS.ONGOING }, {
         endTime: currentDate,
         status: AUCTION_STATUS.FINISHED,
       }, hookActions(ctx));

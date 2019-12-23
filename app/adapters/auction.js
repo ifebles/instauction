@@ -21,7 +21,18 @@ const initAdapter = () => ({ auctionModel }) => ({
     if (hooks.preAction)
       await hooks.preAction({ id, payload });
 
-    const document = await auctionModel.findByIdAndUpdate(id, payload);
+    const document = await auctionModel.findByIdAndUpdate(id, payload, { new: true });
+
+    if (hooks.postAction)
+      await hooks.postAction(document);
+
+    return document;
+  },
+  updateOne: async (query, payload, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
+    if (hooks.preAction)
+      await hooks.preAction({ query, payload });
+
+    const document = await auctionModel.findOneAndUpdate(query, payload, { new: true });
 
     if (hooks.postAction)
       await hooks.postAction(document);
@@ -30,7 +41,7 @@ const initAdapter = () => ({ auctionModel }) => ({
   },
   update: async (query, payload, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
     if (hooks.preAction)
-      await hooks.preAction({ payload });
+      await hooks.preAction({ query, payload });
 
     const documents = await auctionModel.update(query, payload);
 

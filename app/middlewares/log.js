@@ -14,9 +14,9 @@ const initAdapter = ({
 }) => async (ctx, next) => {
   debugOut({
     ns: 'app:req',
-    msg: '%s %s',
+    msg: '[%s] %s %s',
     ctx,
-  }, ctx.request.method, ctx.request.url);
+  }, new Date().toString(), ctx.request.method, ctx.request.url);
 
   debugOut({
     ns: 'app:req:header',

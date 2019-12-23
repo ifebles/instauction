@@ -47,7 +47,7 @@ module.exports = {
   }),
   auctionStopperModel: ({ auctionAdapter, debugOut }) => (ctx, id, winningBid, endAuction) => () => {
     auctionAdapter.findById(id).then(obj => {
-      if (obj.winningBid !== winningBid)
+      if (`${obj.winningBid}` !== winningBid)
         return;
 
       return endAuction({ ctx, id });
@@ -58,11 +58,13 @@ module.exports = {
       debugOut({
         ns: 'app:auction',
         msg: 'Closed: %o',
+        ctx,
       }, id);
     }).catch(reason => {
       debugOut({
         ns: 'app:auction',
         msg: 'Failed to close %o: %o',
+        ctx,
       }, id, reason);
     });
   },

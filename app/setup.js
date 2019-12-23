@@ -105,6 +105,7 @@ const initAdapter = ({
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     });
 
     debugOut({
