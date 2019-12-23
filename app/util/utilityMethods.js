@@ -1,5 +1,5 @@
 const debug = require("debug");
-const { SERVER_CONFIG } = require("../util/constants");
+const { SERVER_CONFIG, AUCTION_STATUS } = require("../util/constants");
 
 
 module.exports = {
@@ -47,7 +47,7 @@ module.exports = {
   }),
   auctionStopperModel: ({ auctionAdapter, debugOut }) => (ctx, id, winningBid, endAuction) => () => {
     auctionAdapter.findById(id).then(obj => {
-      if (`${obj.winningBid}` !== winningBid)
+      if (`${obj.winningBid}` !== winningBid || obj.status !== AUCTION_STATUS.ONGOING)
         return;
 
       return endAuction({ ctx, id });
@@ -70,7 +70,7 @@ module.exports = {
   },
   paginationParser: (validator, pagination) => {
     let cleanPagination;
-    
+
     try {
       validator.paginationPayload(pagination);
       cleanPagination = {
