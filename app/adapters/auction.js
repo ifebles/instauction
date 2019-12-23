@@ -72,7 +72,7 @@ const initAdapter = () => ({ auctionModel }) => ({
     if (hooks.preAction)
       await hooks.preAction({ id });
 
-    const document = await bidModel.findById(id);
+    const document = await auctionModel.findById(id);
 
     if (hooks.postAction)
       await hooks.postAction(document);
