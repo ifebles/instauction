@@ -10,7 +10,7 @@ const initializeGlobals = () => {
 
   global.__serverEnvironment = process.env.NODE_ENV || devEnv;
   global.__serverPort = process.env.PORT || _serverPort;
-  global.__serverConnectionString = process.env.DATABASE_URL || `mongodb://${dbCredentials}mongo:${process.env.DB_PORT || 27017}/instauction`;
+  global.__serverConnectionString = process.env.DATABASE_URL || `mongodb://${dbCredentials}${process.env.DB_SERVER || 'mongo'}:${process.env.DB_PORT || 27017}/instauction`;
   global.__serverDebug = process.env.DEBUG || (global.__serverEnvironment === devEnv ? 'app:*' : '');
 
   _initializedGlobals = true;
