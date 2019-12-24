@@ -40,11 +40,14 @@ const initService = ({
         if (currentWinner.amount >= payload.amount)
           throw new RequestError("Bid amount too low", 400);
       }
+      else if (payload.amount <= validAuction.startingPrice)
+        throw new RequestError("Bid amount too low", 400);
 
       const result = await bidAdapter.create(payload, hookActions(ctx));
+      await auctionAdapter.updateById(payload.auctionId, { winningBid: result._id }, hookActions(ctx))
 
       {
-        const auctionStopper = auctionStopperModel({ auctionAdapter, debugOut })(ctx, payload.auctionId, `${result._id}`, auctionService.endAuction);
+        const auctionStopper = auctionStopperModel({ auctionAdapter, debugOut })(ctx, payload.auctionId, `${result._id}`, auctionService.endAuction, 'new bid');
         setTimeout(auctionStopper, AUCTION_IDLE_TIME_LIMIT_MS);
       }
 

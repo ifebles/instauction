@@ -45,7 +45,13 @@ module.exports = {
         });
     },
   }),
-  auctionStopperModel: ({ auctionAdapter, debugOut }) => (ctx, id, winningBid, endAuction) => () => {
+  auctionStopperModel: ({ auctionAdapter, debugOut }) => (ctx, id, winningBid, endAuction, stopReason) => () => {
+    debugOut({
+      ns: 'app:auction',
+      msg: 'Auction %o "Stop request" reason: %o',
+      ctx,
+    }, id, stopReason);
+
     auctionAdapter.findById(id).then(obj => {
       if (`${obj.winningBid}` !== winningBid || obj.status !== AUCTION_STATUS.ONGOING)
         return;

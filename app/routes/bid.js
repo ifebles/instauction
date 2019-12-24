@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const koaBody = require("koa-body");
 
 
 /**
@@ -16,6 +17,7 @@ const Router = require("koa-router");
  */
 const initRouter = ({
   Router,
+  koaBody,
 }) => ({ app, services }) => {
   const router = new Router({
     prefix: '/bid',
@@ -25,7 +27,7 @@ const initRouter = ({
 
   ///////////////// POST /////////////////
 
-  router.post('/', async (ctx, next) => {
+  router.post('/', koaBody(), async (ctx, next) => {
     const payload = ctx.request.body;
     ctx.body = await services.bidService.createBid({
       ctx,
@@ -39,7 +41,6 @@ const initRouter = ({
   ///////////////// GET /////////////////
 
   router.get(`/`, async (ctx, next) => {
-    const { id } = ctx.params;
     ctx.body = await services.bidService.showBid({ ctx });
 
     await next();
@@ -58,7 +59,7 @@ const initRouter = ({
 };
 
 
-const dependencies = { Router };
+const dependencies = { Router, koaBody };
 
 module.exports = {
   dependencies,

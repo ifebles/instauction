@@ -66,7 +66,7 @@ const initService = ({
         throw new RequestError('Unable to start auction: none found with the specified requirements', 400);
 
       {
-        const auctionStopper = auctionStopperModel({ auctionAdapter, debugOut })(ctx, id, `${result.winningBid}`, this.endAuction);
+        const auctionStopper = auctionStopperModel({ auctionAdapter, debugOut })(ctx, id, `${result.winningBid}`, this.endAuction, 'auction started');
         setTimeout(auctionStopper, AUCTION_IDLE_TIME_LIMIT_MS);
       }
 
