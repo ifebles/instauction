@@ -40,6 +40,7 @@ const initService = ({
           .error(throwError('No valid "email" property found')),
         startingPrice: Joi.number()
           .required()
+          .greater(0)
           .error(throwError('No valid "startingPrice" property found')),
       })
         .required()

@@ -43,6 +43,7 @@
   "devDependencies": {
     "ava": "^2.4.0",
     "ava-http": "^1.0.0",
+    "mongodb-memory-server": "^6.1.1",
     "nodemon": "^2.0.2",
     "sinon": "^7.5.0",
     "test-listen": "^1.1.0"
