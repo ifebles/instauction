@@ -1,6 +1,15 @@
 const { AUCTION_STATUS, AUCTION_IDLE_TIME_LIMIT_MS } = require("../util/constants");
-const { RequestError, debugOut, auctionStopperModel, hookActionsDebugger } = require("../util/utilityMethods");
+const { RequestError, debugOut, auctionStopperModel, hookActionsDebugger, paginationParser } = require("../util/utilityMethods");
 const validatorInit = require("../util/validator");
+
+
+const bidMapper = obj => ({
+  id: obj._id,
+  email: obj.email,
+  amount: obj.amount,
+  auctionId: obj.auctionId,
+  date: obj.createdAt,
+});
 
 
 /**
@@ -15,6 +24,7 @@ const initService = ({
   auctionStopperModel,
   hookActionsDebugger,
   validatorInit,
+  bidMapper,
 }) => ({ bidAdapter, auctionAdapter }) => {
 
   const validate = validatorInit.make(validatorInit.dependencies);
@@ -51,16 +61,24 @@ const initService = ({
         setTimeout(auctionStopper, AUCTION_IDLE_TIME_LIMIT_MS);
       }
 
-      return result;
+      return bidMapper(result);
     },
-    showBid: async ({ ctx, id }) => {
+    showBid: async ({ ctx, id, pagination = null }) => {
       if (id) {
         const result = await bidAdapter.findById(id, hookActions(ctx));
-        return result;
+
+        if (!result)
+          throw new RequestError("Bid not found", 404);
+
+        return bidMapper(result);
       }
 
-      const result = await bidAdapter.find({}, hookActions(ctx));
-      return result;
+      const processedPagination = paginationParser(validate(ctx), pagination);
+      if (processedPagination.zeroDisplay)
+        return [];
+
+      const result = await bidAdapter.find({}, processedPagination.result, hookActions(ctx));
+      return result.map(bidMapper);
     },
   };
 };
@@ -74,6 +92,7 @@ const dependencies = {
   auctionStopperModel,
   hookActionsDebugger,
   validatorInit,
+  bidMapper,
 };
 
 module.exports = {

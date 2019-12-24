@@ -69,7 +69,12 @@ const initRouter = ({
 
   router.get(`/${idParam}/bids`, async (ctx, next) => {
     const { id } = ctx.params;
-    ctx.body = await services.auctionService.showAuctionBids({ ctx, id });
+    const { page, items_per_page } = ctx.request.query;
+    ctx.body = await services.auctionService.showAuctionBids({
+      ctx,
+      id,
+      pagination: { page, items_per_page },
+    });
 
     await next();
   });

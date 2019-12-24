@@ -41,7 +41,11 @@ const initRouter = ({
   ///////////////// GET /////////////////
 
   router.get(`/`, async (ctx, next) => {
-    ctx.body = await services.bidService.showBid({ ctx });
+    const { page, items_per_page } = ctx.request.query;
+    ctx.body = await services.bidService.showBid({
+      ctx,
+      pagination: { page, items_per_page },
+    });
 
     await next();
   });

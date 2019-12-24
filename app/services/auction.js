@@ -21,6 +21,14 @@ const auctionStatusMapper = obj => ({
   endTime: obj.endTime,
 });
 
+const bidMapper = obj => ({
+  id: obj._id,
+  email: obj.email,
+  amount: obj.amount,
+  auctionId: obj.auctionId,
+  date: obj.createdAt,
+});
+
 
 /**
  * 
@@ -37,6 +45,7 @@ const initService = ({
   debugOut,
   auctionStopperModel,
   hookActionsDebugger,
+  bidMapper,
 }) => ({ auctionAdapter, bidAdapter }) => {
 
   const validate = validatorInit.make(validatorInit.dependencies);
@@ -63,7 +72,7 @@ const initService = ({
       }, hookActions(ctx));
 
       if (!result)
-        throw new RequestError('Unable to start auction: none found with the specified requirements', 400);
+        throw new RequestError('Unable to start auction: none found with the specified requirements', 404);
 
       {
         const auctionStopper = auctionStopperModel({ auctionAdapter, debugOut })(ctx, id, `${result.winningBid}`, this.endAuction, 'auction started');
@@ -81,13 +90,17 @@ const initService = ({
       }, hookActions(ctx));
 
       if (!result)
-        throw new RequestError('Unable to end auction: none found with the specified requirements', 400);
+        throw new RequestError('Unable to end auction: none found with the specified requirements', 404);
 
       return auctionMapper(result);
     },
     showAuction: async ({ ctx, id, pagination = null }) => {
       if (id) {
         const result = await auctionAdapter.findById(id, hookActions(ctx));
+
+        if (!result)
+          throw new RequestError("Auction not found", 404);
+
         return auctionMapper(result);
       }
 
@@ -98,14 +111,28 @@ const initService = ({
       const result = await auctionAdapter.find({}, processedPagination.result, hookActions(ctx));
       return result.map(auctionMapper);
     },
-    showAuctionBids: async ({ ctx, id }) => {
-      const result = await bidAdapter.find({ auctionId: id }, hookActions(ctx));
+    showAuctionBids: async ({ ctx, id, pagination = null }) => {
+      {
+        const auctionCheck = await auctionAdapter.findById(id);
 
-      return result;
+        if (!auctionCheck)
+          throw new RequestError("Auction not found", 404);
+      }
+
+      const processedPagination = paginationParser(validate(ctx), pagination);
+      if (processedPagination.zeroDisplay)
+        return [];
+
+      const result = await bidAdapter.find({ auctionId: id }, processedPagination.result, hookActions(ctx));
+      return result.map(bidMapper);
     },
     auctionStatus: async ({ ctx, id, pagination = null }) => {
       if (id) {
         const result = await auctionAdapter.findById(id, hookActions(ctx));
+
+        if (!result)
+          throw new RequestError("Auction not found", 404);
+
         return auctionStatusMapper(result);
       }
 
@@ -131,6 +158,7 @@ const dependencies = {
   debugOut,
   auctionStopperModel,
   hookActionsDebugger,
+  bidMapper,
 };
 
 module.exports = {

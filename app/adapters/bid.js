@@ -28,11 +28,18 @@ const initAdapter = () => ({ bidModel }) => ({
 
     return document;
   },
-  find: async (query = {}, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
+  find: async (query = {}, pagination = null, hooks = { preAction: async () => { }, postAction: async () => { } }) => {
     if (hooks.preAction)
-      await hooks.preAction({ query });
+      await hooks.preAction({ query, pagination });
 
-    const documents = await bidModel.find(query);
+    const findPromise = bidModel.find(query);
+
+    if (pagination)
+      findPromise
+        .skip(pagination.items_per_page * (pagination.page - 1))
+        .limit(pagination.items_per_page);
+
+    const documents = await findPromise;
 
     if (hooks.postAction)
       await hooks.postAction(documents);
