@@ -9,7 +9,11 @@
   "scripts": {
     "start": "node --require dotenv/config app/server.js",
     "start:watch": "nodemon -w app app/server.js",
-    "test": "ava \"test/**/*.test.js\""
+    "test": "ava test/**/*.test.js",
+    "test:unit": "ava test/**/*.unit.test.js",
+    "test:unit:watch": "npm run test:unit -- --watch",
+    "test:int": "ava test/**/*.int.test.js",
+    "test:int:watch": "npm run test:int -- --watch"
   },
   "repository": {
     "type": "git",
