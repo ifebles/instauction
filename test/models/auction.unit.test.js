@@ -1,0 +1,8 @@
+import test from "ava";
+
+
+///////////////////////////// FIXTURES /////////////////////////////
+
+test('Empty test', t => {
+  t.pass();
+});

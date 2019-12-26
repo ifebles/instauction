@@ -7,7 +7,13 @@
     "test": "test"
   },
   "scripts": {
-    "test": "ava \"test/**/*.test.js\""
+    "start": "node --require dotenv/config app/server.js",
+    "start:watch": "nodemon -w app app/server.js",
+    "test": "ava test/**/*.test.js",
+    "test:unit": "ava test/**/*.unit.test.js",
+    "test:unit:watch": "npm run test:unit -- --watch",
+    "test:int": "ava test/**/*.int.test.js",
+    "test:int:watch": "npm run test:int -- --watch"
   },
   "repository": {
     "type": "git",
@@ -27,16 +33,19 @@
   "dependencies": {
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "joi": "^14.3.1",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-router": "^7.4.0",
-    "mongoose": "^5.8.1"
+    "mongoose": "^5.8.1",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "ava": "^2.4.0",
     "ava-http": "^1.0.0",
+    "mongodb-memory-server": "^6.1.1",
     "nodemon": "^2.0.2",
+    "sinon": "^7.5.0",
     "test-listen": "^1.1.0"
   }
 }
