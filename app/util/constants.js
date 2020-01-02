@@ -12,6 +12,7 @@ const initializeGlobals = () => {
   global.__serverPort = process.env.PORT || _serverPort;
   global.__serverConnectionString = process.env.DATABASE_URL || `mongodb://${dbCredentials}${process.env.DB_SERVER || 'mongo'}:${process.env.DB_PORT || 27017}/instauction`;
   global.__serverDebug = process.env.DEBUG || (global.__serverEnvironment === devEnv ? 'app:*' : '');
+  global.__serverAuctionIdleTimeMs = /^\d+$/.test(process.env.AUCTION_IDLE_TIME_LIMIT_MS) ? +process.env.AUCTION_IDLE_TIME_LIMIT_MS : 10000;
 
   _initializedGlobals = true;
 }
@@ -21,6 +22,7 @@ const setTestConfigGlobals = ({ port, dbURI } = {}) => {
   global.__serverPort = port || process.env.PORT || _serverPort;
   global.__serverConnectionString = dbURI || '';
   global.__serverDebug = process.env.DEBUG || '';
+  global.__serverAuctionIdleTimeMs = /^\d+$/.test(process.env.AUCTION_IDLE_TIME_LIMIT_MS) ? +process.env.AUCTION_IDLE_TIME_LIMIT_MS : 10000;
 
   _initializedGlobals = true;
 }
@@ -40,7 +42,7 @@ module.exports = {
     };
   },
   get AUCTION_IDLE_TIME_LIMIT_MS() {
-    return 10000;
+    return global.__serverAuctionIdleTimeMs;
   },
   get SERVER_CONFIG() {
     if (!_initializedGlobals)

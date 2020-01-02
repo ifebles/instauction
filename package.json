@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node --require dotenv/config app/server.js",
-    "start:watch": "nodemon -w app app/server.js",
+    "start:watch": "nodemon -x 'node -r dotenv/config' -w app app/server.js",
     "test": "ava test/**/*.test.js",
     "test:unit": "ava test/**/*.unit.test.js",
     "test:unit:watch": "npm run test:unit -- --watch",
