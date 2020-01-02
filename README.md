@@ -28,6 +28,7 @@ Then navigate to `http://localhost:3100/` in the browser.
 - `DB_PORT`
 - `DB_USER`
 - `DB_PASS`
+- `AUCTION_IDLE_TIME_LIMIT_MS`
 - `DEBUG`
 
 *Note: every environment variable is optional to set*

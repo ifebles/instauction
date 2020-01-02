@@ -2,7 +2,7 @@ const Koa = require("koa");
 const mongoose = require("mongoose");
 const debug = require("debug");
 const { debugOut } = require("./util/utilityMethods");
-const { SERVER_CONFIG, setTestConfigGlobals } = require("./util/constants");
+const { SERVER_CONFIG, setTestConfigGlobals, AUCTION_IDLE_TIME_LIMIT_MS } = require("./util/constants");
 const middlewaresInit = require("./middlewares");
 
 const auctionModelInit = require("./models/auction");
@@ -130,6 +130,7 @@ const initAdapter = ({
 
       debugOut({ msg: '[%s] Server running on %o' }, new Date().toUTCString(), `http://localhost:${SERVER_CONFIG.SERVER_PORT}`);
       debugOut({ msg: 'Environment: %o' }, SERVER_CONFIG.SERVER_ENV);
+      debugOut({ msg: 'Auction idle time limit (ms): %o' }, AUCTION_IDLE_TIME_LIMIT_MS);
     },
   };
 };
