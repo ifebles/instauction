@@ -25,7 +25,7 @@ test.after.always(t => {
 
 /////////////////////// CREATE AUCTION ///////////////////////
 
-test('Should create an action', async t => {
+test('Should create an auction', async t => {
   const expectedResponseStructure = serverResponseStructure;
   const expectedStatusCode = 200;
   const requestPayload = validAuctionCreationPayload;

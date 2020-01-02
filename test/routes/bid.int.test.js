@@ -15,6 +15,10 @@ import {
 
 const http = require("ava-http");
 
+/*
+  Check file "/test/routes/auction.int.test.js" for a more detailed integration test representation
+*/
+
 /////////////////////// FIXTURES ///////////////////////
 
 test.before(async t => {
